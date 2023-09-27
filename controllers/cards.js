@@ -16,14 +16,14 @@ const addCard = (req, res) => {
 const getCards = (req, res) => {
   Card.find({})
     .populate(['owner', 'likes'])
-    .then((card) => res.send(card))
+    .then((card) => res.status(200).send(card))
     .catch(() => res.status(500).send({ message: 'На сервере произошла ошибка' }));
 };
 
 const deleteCard = (req, res) => {
   Card.findByIdAndRemove(req.params.cardId)
     .orFail(new Error('CastError'))
-    .then(() => res.send({ message: 'Карточка удалена' }))
+    .then(() => res.status(200).send({ message: 'Карточка удалена' }))
     .catch((err) => {
       if (err.message === 'CastError' && req.params.cardId.length === 24) {
         res.status(404).send({ message: 'Карточка с таким Id не найдена' });
@@ -37,7 +37,7 @@ const likeCard = (req, res) => {
   Card.findByIdAndUpdate(req.params.cardId, { $addToSet: { likes: req.user._id } }, { new: true })
     .orFail(new Error('CastError'))
     .populate(['owner', 'likes'])
-    .then((card) => res.send(card))
+    .then((card) => res.status(200).send(card))
     .catch((err) => {
       if (err.message === 'CastError' && req.params.cardId.length === 24) {
         res.status(404).send({ message: 'Карточка с таким Id не найдена' });
@@ -51,7 +51,7 @@ const dislikeCard = (req, res) => {
   Card.findByIdAndUpdate(req.params.cardId, { $pull: { likes: req.user._id } }, { new: true })
     .orFail(new Error('CastError'))
     .populate(['owner', 'likes'])
-    .then((card) => res.send(card))
+    .then((card) => res.status(200).send(card))
     .catch((err) => {
       if (err.message === 'CastError' && req.params.cardId.length === 24) {
         res.status(404).send({ message: 'Карточка с таким Id не найдена' });
