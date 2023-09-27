@@ -16,8 +16,13 @@ const getUsers = (req, res) => {
 const getUserById = (req, res) => {
   if (req.params.userId.length === 24) {
     User.findById(req.params.userId)
-      .then((user) => res.send(user))
-      .catch(() => res.status(404).send({ message: 'Пользователь с таким Id не найден' }));
+      .then((user) => {
+        if (user) {
+          res.send(user);
+        } else {
+          res.status(404).send({ message: 'Пользователь с таким Id не найден' });
+        }
+      });
   } else {
     res.status(400).send({ message: 'Некоректный Id пользователя' });
   }
