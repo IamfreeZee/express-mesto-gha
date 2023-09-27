@@ -21,13 +21,15 @@ const getUsers = (req, res) => {
 
 const getUserById = (req, res) => {
   User.findById(req.params.userId)
-    .orFail(new Error('CastError'))
+    .orFail(new Error('NotFound'))
     .then((user) => res.status(200).send(user))
     .catch((err) => {
-      if (err.message === 'CastError' && req.params.userId.length === 24) {
+      if (err.name === 'CastError') {
+        res.status(400).send({ message: 'Не корректный Id пользователя' });
+      } else if (err.message === 'NotFound') {
         res.status(404).send({ message: 'Пользователь с таким Id не найден' });
       } else {
-        res.status(400).send({ message: 'Некоректный Id пользователя' });
+        res.status(500).send({ message: 'На сервере произошла ошибка' });
       }
     });
 };

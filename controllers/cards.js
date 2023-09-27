@@ -22,41 +22,47 @@ const getCards = (req, res) => {
 
 const deleteCard = (req, res) => {
   Card.findByIdAndRemove(req.params.cardId)
-    .orFail(new Error('CastError'))
+    .orFail(new Error('NotFound'))
     .then(() => res.status(200).send({ message: 'Карточка удалена' }))
     .catch((err) => {
-      if (err.message === 'CastError' && req.params.cardId.length === 24) {
+      if (err.name === 'CastError') {
+        res.status(400).send({ message: 'Некоректный Id карточки' });
+      } else if (err.message === 'NotFound') {
         res.status(404).send({ message: 'Карточка с таким Id не найдена' });
       } else {
-        res.status(400).send({ message: 'Некоректный Id карточки' });
+        res.status(500).send({ message: 'На сервере произошла ошибка' });
       }
     });
 };
 
 const likeCard = (req, res) => {
   Card.findByIdAndUpdate(req.params.cardId, { $addToSet: { likes: req.user._id } }, { new: true })
-    .orFail(new Error('CastError'))
+    .orFail(new Error('NotFound'))
     .populate(['owner', 'likes'])
     .then((card) => res.status(200).send(card))
     .catch((err) => {
-      if (err.message === 'CastError' && req.params.cardId.length === 24) {
+      if (err.name === 'CastError') {
+        res.status(400).send({ message: 'Некоректный Id карточки' });
+      } else if (err.message === 'NotFound') {
         res.status(404).send({ message: 'Карточка с таким Id не найдена' });
       } else {
-        res.status(400).send({ message: 'Некоректный Id карточки' });
+        res.status(500).send({ message: 'На сервере произошла ошибка' });
       }
     });
 };
 
 const dislikeCard = (req, res) => {
   Card.findByIdAndUpdate(req.params.cardId, { $pull: { likes: req.user._id } }, { new: true })
-    .orFail(new Error('CastError'))
+    .orFail(new Error('NotFound'))
     .populate(['owner', 'likes'])
     .then((card) => res.status(200).send(card))
     .catch((err) => {
-      if (err.message === 'CastError' && req.params.cardId.length === 24) {
+      if (err.name === 'CastError') {
+        res.status(400).send({ message: 'Некоректный Id карточки' });
+      } else if (err.message === 'NotFound') {
         res.status(404).send({ message: 'Карточка с таким Id не найдена' });
       } else {
-        res.status(400).send({ message: 'Некоректный Id карточки' });
+        res.status(500).send({ message: 'На сервере произошла ошибка' });
       }
     });
 };
