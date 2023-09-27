@@ -11,17 +11,16 @@ const cardSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  owner: {
+  owner: { // кто создал карточку
     type: mongoose.Schema.Types.ObjectId,
     ref: 'user',
     required: true,
   },
-  likes: {
+  likes: [{ // кто лайкал
     type: mongoose.Schema.Types.ObjectId,
     ref: 'user',
-    default: [],
-  },
-  createdAt: {
+  }],
+  createdAt: { // когда создана
     type: Date,
     default: Date.now,
   },

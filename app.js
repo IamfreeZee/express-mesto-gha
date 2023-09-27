@@ -18,10 +18,10 @@ app.use((req, res, next) => {
   req.user = {
     _id: '6513e08a58cd57748e6b32f2', // вставьте сюда _id созданного в предыдущем пункте пользователя
   };
-
   next();
 });
 
 app.use('/users', require('./routes/users'));
+app.use('/cards', require('./routes/cards'));
 
 app.listen(PORT);
