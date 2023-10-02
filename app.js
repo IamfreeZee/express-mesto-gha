@@ -1,6 +1,8 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const { errors } = require('celebrate');
+const auth = require('./middlewares/auth');
 
 const { PORT = 3000, DB_URL = 'mongodb://127.0.0.1:27017/mestodb' } = process.env;
 
@@ -14,12 +16,10 @@ mongoose.connect(DB_URL, {
   useUnifiedTopology: true,
 });
 
-app.use((req, res, next) => {
-  req.user = {
-    _id: '65145f70e3972f0f96343ced', // вставьте сюда _id созданного в предыдущем пункте пользователя
-  };
-  next();
-});
+app.use('/signup', require('./routes/signup'));
+app.use('/signin', require('./routes/signin'));
+
+app.use(auth);
 
 app.use('/users', require('./routes/users'));
 app.use('/cards', require('./routes/cards'));
@@ -27,6 +27,8 @@ app.use('/cards', require('./routes/cards'));
 app.use('*', (req, res) => {
   res.status(404).send({ message: 'Такой страницы не существует' });
 });
+
+app.use(errors());
 
 app.use((err, req, res, next) => {
   const { statusCode = 500, message } = err;
