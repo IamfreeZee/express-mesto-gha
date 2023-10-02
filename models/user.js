@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
+const { urlRegExp, emailRegExp } = require('../constants/regexp');
 
 const userSchema = new mongoose.Schema({
   name: { // имя пользователя
@@ -22,7 +23,7 @@ const userSchema = new mongoose.Schema({
     // required: [true, 'Поле "avatar" должно быть заполнено'],
     validate: {
       validator(url) {
-        return /^https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_+.~#?&/=]*)$/.test(url);
+        return urlRegExp.test(url);
       },
       message: 'Некорректный Url',
     },
@@ -33,7 +34,7 @@ const userSchema = new mongoose.Schema({
     unique: true,
     validate: {
       validator(email) {
-        return /^\S+@\S+\.\S+$/.test(email);
+        return emailRegExp.test(email);
       },
       message: 'Некорректный Email',
     },
@@ -41,7 +42,6 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: [true, 'Поле "password" должно быть заполнено'],
-    minlength: [8, 'Минимальная длина поля "password" - 8'],
     select: false,
   },
 }, { versionKey: false });

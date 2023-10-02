@@ -81,18 +81,3 @@ const dislikeCard = (req, res, next) => {
 module.exports = {
   addCard, getCards, deleteCard, likeCard, dislikeCard,
 };
-
-// const deleteCard = (req, res, next) => {
-//   Card.findByIdAndRemove(req.params.cardId)
-//     .orFail(new Error('NotFoundError'))
-//     .then(() => res.status(200).send({ message: 'Карточка удалена' }))
-//     .catch((err) => {
-//       if (err.name === 'CastError') {
-//         next(new BadRequestError('Не коректный Id карточки'));
-//       } else if (err.message === 'NotFoundError') {
-//         next(new NotFoundError('Карточка с таким Id не найдена'));
-//       } else {
-//         next(err);
-//       }
-//     });
-// };
