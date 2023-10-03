@@ -7,7 +7,7 @@ const { emailRegExp } = require('../constants/regexp');
 router.post('/', celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().pattern(emailRegExp),
-    password: Joi.string().required().min(8),
+    password: Joi.string().required().min(3),
   }),
 }), loginUser);
 

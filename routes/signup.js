@@ -10,7 +10,7 @@ router.post('/', celebrate({
     about: Joi.string().min(2).max(30),
     avatar: Joi.string().pattern(urlRegExp),
     email: Joi.string().required().pattern(/^\S+@\S+\.\S+$/),
-    password: Joi.string().required().min(8),
+    password: Joi.string().required().min(3),
   }),
 }), addUser);
 
